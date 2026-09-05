@@ -1,7 +1,7 @@
 <app-modal [heading]="isEditing ? 'Edit expense' : 'Add expense'" (dismissed)="cancelled.emit()">
   <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
     @if (error(); as message) {
-      <p class="alert alert--error">{{ message }}</p>
+      <p class="alert alert--error"><app-icon name="alert-triangle" [size]="16" />{{ message }}</p>
     }
 
     <div class="field">
@@ -57,12 +57,15 @@
       }
     </div>
 
-    <p class="hint">The month you pick needs a budget before an expense can be filed against it.</p>
+    <p class="hint">
+      <app-icon name="alert-circle" [size]="14" />
+      The month you pick needs a budget before an expense can be filed against it.
+    </p>
 
     <div class="actions">
       <button class="btn" type="button" [disabled]="saving()" (click)="cancelled.emit()">Cancel</button>
       <button class="btn btn--primary" type="submit" [disabled]="saving()">
-        {{ saving() ? 'Saving…' : 'Save expense' }}
+        <app-icon name="receipt" />{{ saving() ? 'Saving…' : 'Save expense' }}
       </button>
     </div>
   </form>

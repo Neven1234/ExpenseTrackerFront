@@ -5,9 +5,16 @@
 }
 
 .hint {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
   margin: -4px 0 16px;
   font-size: 12px;
   color: var(--ink-mute);
+}
+
+.hint app-icon {
+  margin-top: 1px;
 }
 
 .actions {

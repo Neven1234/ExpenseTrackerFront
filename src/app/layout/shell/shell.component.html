@@ -1,7 +1,7 @@
 <div class="page">
   <section class="app">
     <nav class="nav" [class.nav--open]="menuOpen()">
-      <p class="nav__brand">Expense tracker</p>
+      <p class="nav__brand"><app-icon name="coins" [size]="18" />Expense tracker</p>
 
       @for (link of links; track link.path) {
         <a
@@ -9,8 +9,9 @@
           routerLinkActive="nav__item--active"
           [routerLink]="link.path"
           (click)="closeMenu()"
-          >{{ link.label }}</a
         >
+          <app-icon [name]="link.icon" />{{ link.label }}
+        </a>
       }
 
       <div class="nav__user">
@@ -18,11 +19,14 @@
         <span class="nav__name">{{ user()?.username }}</span>
       </div>
 
-      <button class="nav__signout" type="button" (click)="signOut()">Sign out</button>
+      <button class="nav__signout" type="button" (click)="signOut()">
+        <app-icon name="log-out" [size]="14" />Sign out
+      </button>
     </nav>
 
     <div class="main">
       <button class="menu-toggle btn" type="button" (click)="toggleMenu()">
+        <app-icon [name]="menuOpen() ? 'x' : 'menu'" />
         {{ menuOpen() ? 'Close menu' : 'Menu' }}
       </button>
 

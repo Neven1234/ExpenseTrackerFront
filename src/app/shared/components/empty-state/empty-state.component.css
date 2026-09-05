@@ -6,6 +6,18 @@
   background: var(--surface-tint);
 }
 
+.empty__icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--line);
+  color: var(--ink-mute);
+}
+
 .empty__heading {
   margin: 0;
   font-weight: 600;

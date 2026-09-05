@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { EmptyStateComponent } from './components/empty-state/empty-state.component';
 import { ExpenseFormComponent } from './components/expense-form/expense-form.component';
+import { IconComponent } from './components/icon/icon.component';
 import { ModalComponent } from './components/modal/modal.component';
 import { ToastHostComponent } from './components/toast-host/toast-host.component';
 import { CategoryColorPipe } from './pipes/category-color.pipe';
@@ -16,6 +17,7 @@ const SHARED = [
   ConfirmDialogComponent,
   EmptyStateComponent,
   ExpenseFormComponent,
+  IconComponent,
   ModalComponent,
   ToastHostComponent,
   CategoryColorPipe,

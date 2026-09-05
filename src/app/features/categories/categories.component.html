@@ -1,15 +1,17 @@
 <div class="topbar">
   <h1>Categories</h1>
-  <button class="btn btn--primary" type="button" (click)="openAdd()">Add category</button>
+  <button class="btn btn--primary" type="button" (click)="openAdd()">
+    <app-icon name="plus" />Add category
+  </button>
 </div>
 
 @if (loadError(); as message) {
-  <p class="alert alert--error">{{ message }}</p>
+  <p class="alert alert--error"><app-icon name="alert-triangle" [size]="16" />{{ message }}</p>
 }
 
 <div class="panel">
   <div class="panel__head">
-    <h2>Your categories</h2>
+    <h2><app-icon name="tag" [size]="16" />Your categories</h2>
     <span class="muted">{{ categories().length }} in total</span>
   </div>
 
@@ -17,10 +19,13 @@
     <p class="muted">Loading categories…</p>
   } @else if (categories().length === 0) {
     <app-empty-state
+      icon="tag"
       heading="No categories yet"
       message="Categories are how spending gets split up on the overview. Add a few to get going."
     >
-      <button class="btn btn--primary" type="button" (click)="openAdd()">Add category</button>
+      <button class="btn btn--primary" type="button" (click)="openAdd()">
+        <app-icon name="plus" />Add category
+      </button>
     </app-empty-state>
   } @else {
     <ul class="cats">
@@ -28,8 +33,12 @@
         <li class="cats__row">
           <i class="swatch" [style.background]="category.id | categoryColor"></i>
           <span class="cats__name">{{ category.name }}</span>
-          <button class="btn btn--icon" type="button" (click)="openEdit(category)">Rename</button>
-          <button class="btn btn--icon" type="button" (click)="confirmDelete(category)">Delete</button>
+          <button class="btn btn--icon" type="button" title="Rename" aria-label="Rename category" (click)="openEdit(category)">
+            <app-icon name="pencil" />
+          </button>
+          <button class="btn btn--icon" type="button" title="Delete" aria-label="Delete category" (click)="confirmDelete(category)">
+            <app-icon name="trash" />
+          </button>
         </li>
       }
     </ul>
@@ -40,7 +49,7 @@
   <app-modal [heading]="isEditing ? 'Rename category' : 'Add category'" [width]="380" (dismissed)="closeForm()">
     <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
       @if (formError(); as message) {
-        <p class="alert alert--error">{{ message }}</p>
+        <p class="alert alert--error"><app-icon name="alert-triangle" [size]="16" />{{ message }}</p>
       }
 
       <div class="field">
@@ -60,7 +69,7 @@
       <div class="actions">
         <button class="btn" type="button" [disabled]="saving()" (click)="closeForm()">Cancel</button>
         <button class="btn btn--primary" type="submit" [disabled]="saving()">
-          {{ saving() ? 'Saving…' : 'Save category' }}
+          <app-icon name="tag" />{{ saving() ? 'Saving…' : 'Save category' }}
         </button>
       </div>
     </form>

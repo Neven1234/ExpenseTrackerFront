@@ -1,15 +1,17 @@
 <div class="topbar">
   <h1>Budgets</h1>
-  <button class="btn btn--primary" type="button" (click)="openAdd()">New budget</button>
+  <button class="btn btn--primary" type="button" (click)="openAdd()">
+    <app-icon name="plus" />New budget
+  </button>
 </div>
 
 @if (loadError(); as message) {
-  <p class="alert alert--error">{{ message }}</p>
+  <p class="alert alert--error"><app-icon name="alert-triangle" [size]="16" />{{ message }}</p>
 }
 
 <div class="panel">
   <div class="panel__head">
-    <h2>Monthly allowances</h2>
+    <h2><app-icon name="wallet" [size]="16" />Monthly allowances</h2>
     <span class="muted">Anything left over rolls into the next month</span>
   </div>
 
@@ -17,10 +19,13 @@
     <p class="muted">Loading budgets…</p>
   } @else if (budgets().length === 0) {
     <app-empty-state
+      icon="wallet"
       heading="No budgets yet"
       message="A month needs a budget before expenses can be logged against it."
     >
-      <button class="btn btn--primary" type="button" (click)="openAdd()">New budget</button>
+      <button class="btn btn--primary" type="button" (click)="openAdd()">
+        <app-icon name="plus" />New budget
+      </button>
     </app-empty-state>
   } @else {
     <div class="table-scroll">
@@ -40,7 +45,9 @@
           @for (budget of budgets(); track budget.id) {
             <tr>
               <td>
-                <button class="linkish" type="button" (click)="openMonth(budget)">{{ label(budget) }}</button>
+                <button class="linkish" type="button" (click)="openMonth(budget)">
+                  <app-icon name="calendar" [size]="14" />{{ label(budget) }}
+                </button>
               </td>
               <td class="num right">{{ budget.allowance | money }}</td>
               <td class="num right">{{ budget.carriedOver | money }}</td>
@@ -48,8 +55,12 @@
               <td class="num right">{{ budget.spent | money }}</td>
               <td class="num right" [class.is-over]="budget.remaining < 0">{{ budget.remaining | money }}</td>
               <td class="ledger__actions">
-                <button class="btn btn--icon" type="button" (click)="openEdit(budget)">Edit</button>
-                <button class="btn btn--icon" type="button" (click)="confirmDelete(budget)">Delete</button>
+                <button class="btn btn--icon" type="button" title="Edit" aria-label="Edit budget" (click)="openEdit(budget)">
+                  <app-icon name="pencil" />
+                </button>
+                <button class="btn btn--icon" type="button" title="Delete" aria-label="Delete budget" (click)="confirmDelete(budget)">
+                  <app-icon name="trash" />
+                </button>
               </td>
             </tr>
           }
@@ -63,7 +74,7 @@
   <app-modal [heading]="isEditing ? 'Edit allowance' : 'New budget'" [width]="400" (dismissed)="closeForm()">
     <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
       @if (formError(); as message) {
-        <p class="alert alert--error">{{ message }}</p>
+        <p class="alert alert--error"><app-icon name="alert-triangle" [size]="16" />{{ message }}</p>
       }
 
       <div class="grid">
@@ -109,7 +120,7 @@
       <div class="actions">
         <button class="btn" type="button" [disabled]="saving()" (click)="closeForm()">Cancel</button>
         <button class="btn btn--primary" type="submit" [disabled]="saving()">
-          {{ saving() ? 'Saving…' : 'Save budget' }}
+          <app-icon name="wallet" />{{ saving() ? 'Saving…' : 'Save budget' }}
         </button>
       </div>
     </form>

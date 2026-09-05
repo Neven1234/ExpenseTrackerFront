@@ -4,6 +4,13 @@
   gap: 12px;
 }
 
+.filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--ink-mute);
+}
+
 .total {
   font-size: 13px;
   font-variant-numeric: tabular-nums;

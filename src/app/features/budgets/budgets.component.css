@@ -19,6 +19,9 @@
 }
 
 .linkish {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   font: inherit;
   font-weight: 500;
   padding: 0;
@@ -27,6 +30,10 @@
   color: var(--ink);
   cursor: pointer;
   text-align: left;
+}
+
+.linkish app-icon {
+  color: var(--ink-mute);
 }
 
 .linkish:hover {

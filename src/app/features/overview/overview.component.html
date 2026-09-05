@@ -1,19 +1,21 @@
 <div class="topbar">
   <div class="topbar__month">
     <button class="btn btn--icon" type="button" aria-label="Previous month" (click)="monthState.previous()">
-      &larr;
+      <app-icon name="chevron-left" [size]="17" />
     </button>
     <h1>{{ monthState.label() }}</h1>
-    <button class="btn btn--icon" type="button" aria-label="Next month" (click)="monthState.next()">&rarr;</button>
+    <button class="btn btn--icon" type="button" aria-label="Next month" (click)="monthState.next()">
+      <app-icon name="chevron-right" [size]="17" />
+    </button>
   </div>
 
   <button class="btn btn--primary" type="button" [disabled]="!hasBudget() || categories().length === 0" (click)="openAdd()">
-    Add expense
+    <app-icon name="plus" />Add expense
   </button>
 </div>
 
 @if (loadError(); as message) {
-  <p class="alert alert--error">{{ message }}</p>
+  <p class="alert alert--error"><app-icon name="alert-triangle" [size]="16" />{{ message }}</p>
 }
 
 @if (loading()) {
@@ -21,6 +23,7 @@
 } @else if (!hasBudget()) {
   <div class="panel">
     <app-empty-state
+      icon="wallet"
       heading="No budget for {{ monthState.label() }}"
       message="Set an allowance for the month before logging expenses against it. Anything left over from the previous month carries forward automatically."
     >
@@ -34,7 +37,7 @@
           placeholder="Allowance, e.g. 20000"
         />
         <button class="btn btn--primary" type="submit" [disabled]="savingBudget()">
-          {{ savingBudget() ? 'Saving…' : 'Set budget' }}
+          <app-icon name="wallet" />{{ savingBudget() ? 'Saving…' : 'Set budget' }}
         </button>
       </form>
     </app-empty-state>
@@ -58,6 +61,7 @@
       <strong class="num">{{ previousBudget()?.spent ?? 0 | money }}</strong>
       @if (changeAgainstPrevious(); as change) {
         <em [class.is-down]="change.percent < 0">
+          <app-icon [name]="change.percent < 0 ? 'trending-down' : 'trending-up'" [size]="14" />
           {{ change.percent > 0 ? '+' : '' }}{{ change.percent | number: '1.0-0' }}%
         </em>
       }
@@ -66,8 +70,8 @@
 
   <div class="panel">
     <div class="panel__head">
-      <h2>Budget for {{ monthState.label() }}</h2>
-      <a class="link" routerLink="/budgets">Adjust</a>
+      <h2><app-icon name="wallet" [size]="16" />Budget for {{ monthState.label() }}</h2>
+      <a class="link" routerLink="/budgets">Adjust<app-icon name="arrow-right" [size]="14" /></a>
     </div>
 
     <div class="meter" [attr.aria-label]="'Spent ' + (monthBudget.spent | money) + ' of ' + (monthBudget.totalAvailable | money)">
@@ -92,7 +96,7 @@
   </div>
 
   <div class="panel">
-    <div class="panel__head"><h2>Where it went</h2></div>
+    <div class="panel__head"><h2><app-icon name="pie-chart" [size]="16" />Where it went</h2></div>
 
     @if (slices().length === 0) {
       <p class="muted">Nothing logged for this month yet.</p>
@@ -117,14 +121,14 @@
 
   <div class="panel">
     <div class="panel__head">
-      <h2>Recent expenses</h2>
-      <a class="link" routerLink="/expenses">See all</a>
+      <h2><app-icon name="receipt" [size]="16" />Recent expenses</h2>
+      <a class="link" routerLink="/expenses">See all<app-icon name="arrow-right" [size]="14" /></a>
     </div>
 
     @if (expenses().length === 0) {
-      <app-empty-state heading="Nothing logged yet" message="Add your first expense for {{ monthState.label() }}.">
+      <app-empty-state icon="receipt" heading="Nothing logged yet" message="Add your first expense for {{ monthState.label() }}.">
         <button class="btn btn--primary" type="button" [disabled]="categories().length === 0" (click)="openAdd()">
-          Add expense
+          <app-icon name="plus" />Add expense
         </button>
         @if (categories().length === 0) {
           <p class="muted create-first">Create a category first over on <a routerLink="/categories">Categories</a>.</p>
@@ -153,8 +157,12 @@
                 <td class="ledger__cat">{{ expense.categoryName }}</td>
                 <td class="ledger__amount num">{{ expense.amount | money }}</td>
                 <td class="ledger__actions">
-                  <button class="btn btn--icon" type="button" (click)="openEdit(expense)">Edit</button>
-                  <button class="btn btn--icon" type="button" (click)="confirmDelete(expense)">Delete</button>
+                  <button class="btn btn--icon" type="button" title="Edit" aria-label="Edit expense" (click)="openEdit(expense)">
+                    <app-icon name="pencil" />
+                  </button>
+                  <button class="btn btn--icon" type="button" title="Delete" aria-label="Delete expense" (click)="confirmDelete(expense)">
+                    <app-icon name="trash" />
+                  </button>
                 </td>
               </tr>
             }

@@ -1,38 +1,43 @@
 <div class="topbar">
   <div class="topbar__month">
     <button class="btn btn--icon" type="button" aria-label="Previous month" (click)="monthState.previous()">
-      &larr;
+      <app-icon name="chevron-left" [size]="17" />
     </button>
     <h1>{{ monthState.label() }}</h1>
-    <button class="btn btn--icon" type="button" aria-label="Next month" (click)="monthState.next()">&rarr;</button>
+    <button class="btn btn--icon" type="button" aria-label="Next month" (click)="monthState.next()">
+      <app-icon name="chevron-right" [size]="17" />
+    </button>
   </div>
 
   <button class="btn btn--primary" type="button" [disabled]="categories().length === 0" (click)="openAdd()">
-    Add expense
+    <app-icon name="plus" />Add expense
   </button>
 </div>
 
 @if (loadError(); as message) {
-  <p class="alert alert--error">{{ message }}</p>
+  <p class="alert alert--error"><app-icon name="alert-triangle" [size]="16" />{{ message }}</p>
 }
 
 <div class="panel">
   <div class="panel__head">
-    <h2>Expenses</h2>
+    <h2><app-icon name="receipt" [size]="16" />Expenses</h2>
 
     <div class="head-tools">
       <span class="muted total">{{ monthTotal() | money: 'code' }}</span>
-      <select
-        class="select-inline"
-        aria-label="Filter by category"
-        [value]="categoryFilter()"
-        (change)="onFilterChange($any($event.target).value)"
-      >
-        <option value="">All categories</option>
-        @for (category of categories(); track category.id) {
-          <option [value]="category.id">{{ category.name }}</option>
-        }
-      </select>
+      <span class="filter">
+        <app-icon name="filter" [size]="15" />
+        <select
+          class="select-inline"
+          aria-label="Filter by category"
+          [value]="categoryFilter()"
+          (change)="onFilterChange($any($event.target).value)"
+        >
+          <option value="">All categories</option>
+          @for (category of categories(); track category.id) {
+            <option [value]="category.id">{{ category.name }}</option>
+          }
+        </select>
+      </span>
     </div>
   </div>
 
@@ -40,11 +45,12 @@
     <p class="muted">Loading expenses…</p>
   } @else if (total() === 0) {
     <app-empty-state
+      icon="receipt"
       heading="No expenses here"
       message="Nothing matches this month and filter. Log one to get started."
     >
       <button class="btn btn--primary" type="button" [disabled]="categories().length === 0" (click)="openAdd()">
-        Add expense
+        <app-icon name="plus" />Add expense
       </button>
     </app-empty-state>
   } @else {
@@ -70,8 +76,12 @@
               <td class="ledger__cat">{{ expense.categoryName }}</td>
               <td class="ledger__amount num">{{ expense.amount | money }}</td>
               <td class="ledger__actions">
-                <button class="btn btn--icon" type="button" (click)="openEdit(expense)">Edit</button>
-                <button class="btn btn--icon" type="button" (click)="confirmDelete(expense)">Delete</button>
+                <button class="btn btn--icon" type="button" title="Edit" aria-label="Edit expense" (click)="openEdit(expense)">
+                  <app-icon name="pencil" />
+                </button>
+                <button class="btn btn--icon" type="button" title="Delete" aria-label="Delete expense" (click)="confirmDelete(expense)">
+                  <app-icon name="trash" />
+                </button>
               </td>
             </tr>
           }
@@ -82,8 +92,12 @@
     <div class="pager">
       <span>{{ pageStart() }}&ndash;{{ pageEnd() }} of {{ total() }}</span>
       <div>
-        <button class="btn" type="button" [disabled]="page() === 1" (click)="previousPage()">Previous</button>
-        <button class="btn" type="button" [disabled]="page() === pageCount()" (click)="nextPage()">Next</button>
+        <button class="btn" type="button" [disabled]="page() === 1" (click)="previousPage()">
+          <app-icon name="chevron-left" [size]="15" />Previous
+        </button>
+        <button class="btn" type="button" [disabled]="page() === pageCount()" (click)="nextPage()">
+          Next<app-icon name="chevron-right" [size]="15" />
+        </button>
       </div>
     </div>
   }

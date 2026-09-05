@@ -1,6 +1,14 @@
 .message {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
   margin: -6px 0 20px;
   color: var(--ink-soft);
+}
+
+.message app-icon {
+  margin-top: 2px;
+  color: var(--danger);
 }
 
 .actions {

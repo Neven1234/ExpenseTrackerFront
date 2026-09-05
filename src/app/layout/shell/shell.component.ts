@@ -2,10 +2,12 @@ import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AuthService } from '../../core/services/auth.service';
+import { IconName } from '../../shared/components/icon/icon.component';
 
 interface NavLink {
   label: string;
   path: string;
+  icon: IconName;
 }
 
 @Component({
@@ -19,10 +21,10 @@ export class ShellComponent {
   private readonly router = inject(Router);
 
   readonly links: NavLink[] = [
-    { label: 'Overview', path: '/overview' },
-    { label: 'Expenses', path: '/expenses' },
-    { label: 'Categories', path: '/categories' },
-    { label: 'Budgets', path: '/budgets' },
+    { label: 'Overview', path: '/overview', icon: 'pie-chart' },
+    { label: 'Expenses', path: '/expenses', icon: 'receipt' },
+    { label: 'Categories', path: '/categories', icon: 'tag' },
+    { label: 'Budgets', path: '/budgets', icon: 'wallet' },
   ];
 
   readonly user = this.auth.user;
