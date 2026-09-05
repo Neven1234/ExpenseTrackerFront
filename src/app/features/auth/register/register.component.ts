@@ -17,12 +17,17 @@ export class RegisterComponent {
 
   readonly busy = signal(false);
   readonly error = signal<string | null>(null);
+  readonly passwordVisible = signal(false);
 
   readonly form = this.formBuilder.nonNullable.group({
     username: ['', [Validators.required, Validators.maxLength(100)]],
     email: ['', [Validators.required, Validators.email, Validators.maxLength(256)]],
     password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(128)]],
   });
+
+  togglePassword(): void {
+    this.passwordVisible.update(visible => !visible);
+  }
 
   invalid(control: 'username' | 'email' | 'password'): boolean {
     const field = this.form.controls[control];
