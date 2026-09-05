@@ -1,0 +1,18 @@
+.empty {
+  padding: 40px 20px;
+  text-align: center;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-tint);
+}
+
+.empty__heading {
+  margin: 0;
+  font-weight: 600;
+}
+
+.empty__message {
+  margin: 6px 0 16px;
+  color: var(--ink-soft);
+  font-size: 13px;
+}

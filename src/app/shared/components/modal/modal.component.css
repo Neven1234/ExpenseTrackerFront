@@ -1,0 +1,26 @@
+.stage {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  padding: 24px;
+  background: rgba(28, 31, 38, 0.4);
+  display: grid;
+  place-items: center;
+  overflow-y: auto;
+}
+
+.modal {
+  max-width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow-pop);
+}
+
+.modal__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}

@@ -1,0 +1,78 @@
+<div class="topbar">
+  <h1>Categories</h1>
+  <button class="btn btn--primary" type="button" (click)="openAdd()">Add category</button>
+</div>
+
+@if (loadError(); as message) {
+  <p class="alert alert--error">{{ message }}</p>
+}
+
+<div class="panel">
+  <div class="panel__head">
+    <h2>Your categories</h2>
+    <span class="muted">{{ categories().length }} in total</span>
+  </div>
+
+  @if (loading()) {
+    <p class="muted">Loading categories…</p>
+  } @else if (categories().length === 0) {
+    <app-empty-state
+      heading="No categories yet"
+      message="Categories are how spending gets split up on the overview. Add a few to get going."
+    >
+      <button class="btn btn--primary" type="button" (click)="openAdd()">Add category</button>
+    </app-empty-state>
+  } @else {
+    <ul class="cats">
+      @for (category of categories(); track category.id) {
+        <li class="cats__row">
+          <i class="swatch" [style.background]="category.id | categoryColor"></i>
+          <span class="cats__name">{{ category.name }}</span>
+          <button class="btn btn--icon" type="button" (click)="openEdit(category)">Rename</button>
+          <button class="btn btn--icon" type="button" (click)="confirmDelete(category)">Delete</button>
+        </li>
+      }
+    </ul>
+  }
+</div>
+
+@if (formOpen()) {
+  <app-modal [heading]="isEditing ? 'Rename category' : 'Add category'" [width]="380" (dismissed)="closeForm()">
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      @if (formError(); as message) {
+        <p class="alert alert--error">{{ message }}</p>
+      }
+
+      <div class="field">
+        <label for="category-name">Name</label>
+        <input
+          id="category-name"
+          type="text"
+          formControlName="name"
+          placeholder="Groceries"
+          [class.is-invalid]="nameInvalid"
+        />
+        @if (nameInvalid) {
+          <span class="field__error">Give the category a name, up to 60 characters.</span>
+        }
+      </div>
+
+      <div class="actions">
+        <button class="btn" type="button" [disabled]="saving()" (click)="closeForm()">Cancel</button>
+        <button class="btn btn--primary" type="submit" [disabled]="saving()">
+          {{ saving() ? 'Saving…' : 'Save category' }}
+        </button>
+      </div>
+    </form>
+  </app-modal>
+}
+
+@if (pendingDelete(); as category) {
+  <app-confirm-dialog
+    heading="Delete category"
+    [message]="'Delete ' + category.name + '? Categories with expenses logged against them cannot be deleted.'"
+    [busy]="deleting()"
+    (confirmed)="deleteCategory()"
+    (cancelled)="pendingDelete.set(null)"
+  />
+}

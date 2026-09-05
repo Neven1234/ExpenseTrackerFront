@@ -1,0 +1,187 @@
+<div class="topbar">
+  <div class="topbar__month">
+    <button class="btn btn--icon" type="button" aria-label="Previous month" (click)="monthState.previous()">
+      &larr;
+    </button>
+    <h1>{{ monthState.label() }}</h1>
+    <button class="btn btn--icon" type="button" aria-label="Next month" (click)="monthState.next()">&rarr;</button>
+  </div>
+
+  <button class="btn btn--primary" type="button" [disabled]="!hasBudget() || categories().length === 0" (click)="openAdd()">
+    Add expense
+  </button>
+</div>
+
+@if (loadError(); as message) {
+  <p class="alert alert--error">{{ message }}</p>
+}
+
+@if (loading()) {
+  <p class="muted">Loading {{ monthState.label() }}…</p>
+} @else if (!hasBudget()) {
+  <div class="panel">
+    <app-empty-state
+      heading="No budget for {{ monthState.label() }}"
+      message="Set an allowance for the month before logging expenses against it. Anything left over from the previous month carries forward automatically."
+    >
+      <form class="budget-form" [formGroup]="budgetForm" (ngSubmit)="createBudget()" novalidate>
+        <input
+          type="number"
+          min="0"
+          step="0.01"
+          formControlName="allowance"
+          aria-label="Monthly allowance"
+          placeholder="Allowance, e.g. 20000"
+        />
+        <button class="btn btn--primary" type="submit" [disabled]="savingBudget()">
+          {{ savingBudget() ? 'Saving…' : 'Set budget' }}
+        </button>
+      </form>
+    </app-empty-state>
+  </div>
+} @else if (budget(); as monthBudget) {
+  <div class="summary">
+    <div class="summary__cell">
+      <span>Total spent</span>
+      <strong class="num">{{ monthBudget.spent | money: 'code' }}</strong>
+    </div>
+    <div class="summary__cell">
+      <span>Expenses</span>
+      <strong class="num">{{ expenses().length }}</strong>
+    </div>
+    <div class="summary__cell">
+      <span>Daily average</span>
+      <strong class="num">{{ dailyAverage() | money: 'code' }}</strong>
+    </div>
+    <div class="summary__cell">
+      <span>Against {{ previousLabel() }}</span>
+      <strong class="num">{{ previousBudget()?.spent ?? 0 | money }}</strong>
+      @if (changeAgainstPrevious(); as change) {
+        <em [class.is-down]="change.percent < 0">
+          {{ change.percent > 0 ? '+' : '' }}{{ change.percent | number: '1.0-0' }}%
+        </em>
+      }
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel__head">
+      <h2>Budget for {{ monthState.label() }}</h2>
+      <a class="link" routerLink="/budgets">Adjust</a>
+    </div>
+
+    <div class="meter" [attr.aria-label]="'Spent ' + (monthBudget.spent | money) + ' of ' + (monthBudget.totalAvailable | money)">
+      <span
+        class="meter__fill"
+        [class.meter__fill--over]="monthBudget.remaining < 0"
+        [style.width.%]="spentShare()"
+      ></span>
+    </div>
+
+    <div class="meter__facts">
+      <div><span>Allowance</span><b class="num">{{ monthBudget.allowance | money }}</b></div>
+      <div><span>Carried over</span><b class="num">{{ monthBudget.carriedOver | money }}</b></div>
+      <div><span>Available</span><b class="num">{{ monthBudget.totalAvailable | money }}</b></div>
+      <div>
+        <span>{{ monthBudget.remaining < 0 ? 'Over by' : 'Remaining' }}</span>
+        <b class="num" [class.is-over]="monthBudget.remaining < 0">
+          {{ (monthBudget.remaining < 0 ? -monthBudget.remaining : monthBudget.remaining) | money }}
+        </b>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel__head"><h2>Where it went</h2></div>
+
+    @if (slices().length === 0) {
+      <p class="muted">Nothing logged for this month yet.</p>
+    } @else {
+      <div class="split">
+        @for (slice of slices(); track slice.categoryId) {
+          <span [style.width.%]="slice.share" [style.background]="slice.color" [title]="slice.name"></span>
+        }
+      </div>
+
+      <div class="legend">
+        @for (slice of slices(); track slice.categoryId) {
+          <p class="legend__row">
+            <i [style.background]="slice.color"></i>{{ slice.name }}
+            <b class="num">{{ slice.amount | money }}</b>
+            <small>{{ slice.share | number: '1.0-0' }}%</small>
+          </p>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="panel">
+    <div class="panel__head">
+      <h2>Recent expenses</h2>
+      <a class="link" routerLink="/expenses">See all</a>
+    </div>
+
+    @if (expenses().length === 0) {
+      <app-empty-state heading="Nothing logged yet" message="Add your first expense for {{ monthState.label() }}.">
+        <button class="btn btn--primary" type="button" [disabled]="categories().length === 0" (click)="openAdd()">
+          Add expense
+        </button>
+        @if (categories().length === 0) {
+          <p class="muted create-first">Create a category first over on <a routerLink="/categories">Categories</a>.</p>
+        }
+      </app-empty-state>
+    } @else {
+      <table class="ledger">
+        <thead>
+          <tr>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Amount</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (day of recentDays(); track day.date) {
+            <tr class="ledger__day">
+              <td colspan="4">{{ day.date | dayLabel }}</td>
+            </tr>
+            @for (expense of day.expenses; track expense.id) {
+              <tr>
+                <td class="ledger__name">
+                  <i [style.background]="expense.categoryId | categoryColor"></i>{{ expense.note }}
+                </td>
+                <td class="ledger__cat">{{ expense.categoryName }}</td>
+                <td class="ledger__amount num">{{ expense.amount | money }}</td>
+                <td class="ledger__actions">
+                  <button class="btn btn--icon" type="button" (click)="openEdit(expense)">Edit</button>
+                  <button class="btn btn--icon" type="button" (click)="confirmDelete(expense)">Delete</button>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+}
+
+@if (formOpen()) {
+  <app-expense-form
+    [expense]="editing()"
+    [categories]="categories()"
+    [year]="monthState.year()"
+    [month]="monthState.month()"
+    (saved)="onSaved()"
+    (cancelled)="closeForm()"
+  />
+}
+
+@if (pendingDelete(); as expense) {
+  <app-confirm-dialog
+    heading="Delete expense"
+    [message]="'Delete ' + expense.note + '? This cannot be undone.'"
+    [busy]="deleting()"
+    (confirmed)="deleteExpense()"
+    (cancelled)="pendingDelete.set(null)"
+  />
+}

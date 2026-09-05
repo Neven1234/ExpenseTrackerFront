@@ -1,59 +1,70 @@
-# ExpenseTrackerFront
+# Expense tracker — front end
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.1.0.
+Angular 20 client for the `ExpenseTrackerBack` API, built to the approved mockups.
 
-## Development server
+## Running it
 
-To start a local development server, run:
-
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+The API must be running first — the client is useless without it.
 
 ```bash
-ng generate component component-name
+cd ../ExpenseTrackerBack/ExpenseTracker.Api
+dotnet run
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+That listens on `http://localhost:5159` and already allows `http://localhost:4200` via CORS.
 
 ```bash
-ng generate --help
+npm start
 ```
 
-## Building
+Then open `http://localhost:4200`. Create an account, add a category or two, set a budget for the
+month, and start logging.
 
-To build the project run:
+The API base URL lives in `src/environments/environment.ts` (dev) and
+`environment.production.ts` (build), swapped by `fileReplacements` in `angular.json`.
+
+## Screens
+
+| Route                      | What it does                                                              |
+| -------------------------- | ------------------------------------------------------------------------- |
+| `/account/sign-in`         | Sign in                                                                   |
+| `/account/create-account`  | Register                                                                  |
+| `/overview`                | Month summary, budget meter, category split, recent expenses              |
+| `/expenses`                | Full ledger for the month, category filter, paging, edit and delete       |
+| `/categories`              | Category CRUD                                                             |
+| `/budgets`                 | Monthly allowances, with the carry-over the API calculates                |
+
+## How it is put together
+
+```
+src/app/
+  core/          models, HTTP services, interceptors, guards, shared utilities
+  shared/        design-system components (modal, confirm, toasts, expense form) and pipes
+  layout/shell/  the signed-in frame: sidebar nav and router outlet
+  features/      one lazy-loaded module per screen
+```
+
+- **Auth** — the JWT and user details are held in a signal and mirrored to `localStorage`.
+  `authInterceptor` attaches the bearer token; `errorInterceptor` unwraps the API's
+  `ProblemDetails` into a plain message and signs the user out on a 401.
+- **Rendering** — every route is client-rendered (`app.routes.server.ts`), because the whole app
+  sits behind a token the browser holds. The SSR build still produces the shell.
+- **Month state** — `MonthStateService` holds the year and month the app is looking at, so the
+  overview, the ledger and the add-expense form agree on which budget is in play.
+- **Category colours** — the API has no colour field, so `categoryColor()` hashes the category id
+  into the mockup palette. Colours are stable per category and consistent across screens.
+
+## Two things worth knowing about the API contract
+
+- An expense can only be filed against a month that already **has a budget**. The overview shows an
+  inline "set an allowance" panel for a month without one, and the add-expense form surfaces the
+  API's error if the chosen date lands in an unbudgeted month.
+- `Expense` has a single text field (`note`, 250 chars). The mockup's separate *Description* and
+  *Note* inputs are therefore one field, labelled **Description**.
+
+## Checks
 
 ```bash
-ng build
+npm run build
+npm test -- --watch=false --browsers=ChromeHeadless
 ```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

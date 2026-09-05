@@ -1,0 +1,129 @@
+<div class="topbar">
+  <h1>Budgets</h1>
+  <button class="btn btn--primary" type="button" (click)="openAdd()">New budget</button>
+</div>
+
+@if (loadError(); as message) {
+  <p class="alert alert--error">{{ message }}</p>
+}
+
+<div class="panel">
+  <div class="panel__head">
+    <h2>Monthly allowances</h2>
+    <span class="muted">Anything left over rolls into the next month</span>
+  </div>
+
+  @if (loading()) {
+    <p class="muted">Loading budgets…</p>
+  } @else if (budgets().length === 0) {
+    <app-empty-state
+      heading="No budgets yet"
+      message="A month needs a budget before expenses can be logged against it."
+    >
+      <button class="btn btn--primary" type="button" (click)="openAdd()">New budget</button>
+    </app-empty-state>
+  } @else {
+    <div class="table-scroll">
+      <table class="ledger budgets">
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>Allowance</th>
+            <th>Carried over</th>
+            <th>Available</th>
+            <th>Spent</th>
+            <th>Remaining</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (budget of budgets(); track budget.id) {
+            <tr>
+              <td>
+                <button class="linkish" type="button" (click)="openMonth(budget)">{{ label(budget) }}</button>
+              </td>
+              <td class="num right">{{ budget.allowance | money }}</td>
+              <td class="num right">{{ budget.carriedOver | money }}</td>
+              <td class="num right">{{ budget.totalAvailable | money }}</td>
+              <td class="num right">{{ budget.spent | money }}</td>
+              <td class="num right" [class.is-over]="budget.remaining < 0">{{ budget.remaining | money }}</td>
+              <td class="ledger__actions">
+                <button class="btn btn--icon" type="button" (click)="openEdit(budget)">Edit</button>
+                <button class="btn btn--icon" type="button" (click)="confirmDelete(budget)">Delete</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
+
+@if (formOpen()) {
+  <app-modal [heading]="isEditing ? 'Edit allowance' : 'New budget'" [width]="400" (dismissed)="closeForm()">
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      @if (formError(); as message) {
+        <p class="alert alert--error">{{ message }}</p>
+      }
+
+      <div class="grid">
+        <div class="field">
+          <label for="budget-month">Month</label>
+          <select id="budget-month" formControlName="month">
+            @for (month of months; track month.value) {
+              <option [value]="month.value">{{ month.label }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="budget-year">Year</label>
+          <select id="budget-year" formControlName="year">
+            @for (year of years; track year) {
+              <option [value]="year">{{ year }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="budget-allowance">Allowance</label>
+        <input
+          id="budget-allowance"
+          type="number"
+          min="0"
+          step="0.01"
+          formControlName="allowance"
+          placeholder="20000"
+          [class.is-invalid]="allowanceInvalid"
+        />
+        @if (allowanceInvalid) {
+          <span class="field__error">Enter an allowance of zero or more.</span>
+        }
+      </div>
+
+      @if (isEditing) {
+        <p class="hint">The month is fixed once a budget exists — only the allowance can change.</p>
+      }
+
+      <div class="actions">
+        <button class="btn" type="button" [disabled]="saving()" (click)="closeForm()">Cancel</button>
+        <button class="btn btn--primary" type="submit" [disabled]="saving()">
+          {{ saving() ? 'Saving…' : 'Save budget' }}
+        </button>
+      </div>
+    </form>
+  </app-modal>
+}
+
+@if (pendingDelete(); as budget) {
+  <app-confirm-dialog
+    heading="Delete budget"
+    [message]="
+      'Delete the budget for ' + label(budget) + '? A month that still has expenses logged against it cannot be deleted.'
+    "
+    [busy]="deleting()"
+    (confirmed)="deleteBudget()"
+    (cancelled)="pendingDelete.set(null)"
+  />
+}

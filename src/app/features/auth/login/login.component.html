@@ -1,0 +1,59 @@
+<div class="auth-page">
+  <section class="auth">
+    <div class="auth__aside">
+      <p class="auth__brand">Expense tracker</p>
+      <p class="auth__pitch">Every pound, sorted by month.</p>
+      <div class="auth__figures">
+        <div><span>Budgets that roll over</span><strong>Monthly</strong></div>
+        <div><span>Your categories</span><strong>Yours</strong></div>
+      </div>
+    </div>
+
+    <form class="auth__form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <h1>Welcome back</h1>
+      <p class="auth__hint">Sign in to pick up where you left off.</p>
+
+      @if (error(); as message) {
+        <p class="alert alert--error">{{ message }}</p>
+      }
+
+      <div class="field">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          autocomplete="email"
+          formControlName="email"
+          placeholder="name@company.com"
+          [class.is-invalid]="invalid('email')"
+        />
+        @if (invalid('email')) {
+          <span class="field__error">Enter a valid email address.</span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          autocomplete="current-password"
+          formControlName="password"
+          placeholder="••••••••"
+          [class.is-invalid]="invalid('password')"
+        />
+        @if (invalid('password')) {
+          <span class="field__error">Enter your password.</span>
+        }
+      </div>
+
+      <button class="btn btn--primary btn--block" type="submit" [disabled]="busy()">
+        {{ busy() ? 'Signing in…' : 'Sign in' }}
+      </button>
+
+      <p class="auth__foot">
+        New here? <a routerLink="/account/create-account">Create an account</a>
+      </p>
+    </form>
+  </section>
+</div>

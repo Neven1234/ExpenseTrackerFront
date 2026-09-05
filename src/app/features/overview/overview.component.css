@@ -1,0 +1,86 @@
+.meter {
+  display: flex;
+  height: 10px;
+  border-radius: 5px;
+  overflow: hidden;
+  background: var(--surface-tint);
+  box-shadow: inset 0 0 0 1px var(--line);
+  margin-bottom: 16px;
+}
+
+.meter__fill {
+  display: block;
+  background: var(--accent);
+  transition: width 0.2s ease;
+}
+
+.meter__fill--over {
+  background: var(--danger);
+}
+
+.meter__facts {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.meter__facts div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.meter__facts span {
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+.meter__facts b {
+  font-weight: 500;
+}
+
+.meter__facts b.is-over {
+  color: var(--danger);
+}
+
+.budget-form {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.budget-form input {
+  font: inherit;
+  width: 220px;
+  padding: 9px 11px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.budget-form input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.link {
+  font-size: 13px;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.create-first {
+  margin: 12px 0 0;
+  font-size: 13px;
+}
+
+@media (max-width: 700px) {
+  .meter__facts {
+    grid-template-columns: 1fr 1fr;
+  }
+}

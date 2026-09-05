@@ -1,0 +1,72 @@
+<div class="auth-page">
+  <section class="auth">
+    <div class="auth__aside">
+      <p class="auth__brand">Expense tracker</p>
+      <p class="auth__pitch">Every pound, sorted by month.</p>
+      <div class="auth__figures">
+        <div><span>Set up in</span><strong>A minute</strong></div>
+        <div><span>Costs you</span><strong>Nothing</strong></div>
+      </div>
+    </div>
+
+    <form class="auth__form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <h1>Create an account</h1>
+      <p class="auth__hint">Start with a budget for the month, then log as you go.</p>
+
+      @if (error(); as message) {
+        <p class="alert alert--error">{{ message }}</p>
+      }
+
+      <div class="field">
+        <label for="username">Name</label>
+        <input
+          id="username"
+          type="text"
+          autocomplete="name"
+          formControlName="username"
+          placeholder="Mohamed A."
+          [class.is-invalid]="invalid('username')"
+        />
+        @if (invalid('username')) {
+          <span class="field__error">Tell us what to call you.</span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="register-email">Email</label>
+        <input
+          id="register-email"
+          type="email"
+          autocomplete="email"
+          formControlName="email"
+          placeholder="name@company.com"
+          [class.is-invalid]="invalid('email')"
+        />
+        @if (invalid('email')) {
+          <span class="field__error">Enter a valid email address.</span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="register-password">Password</label>
+        <input
+          id="register-password"
+          type="password"
+          autocomplete="new-password"
+          formControlName="password"
+          placeholder="At least 8 characters"
+          [class.is-invalid]="invalid('password')"
+        />
+        @if (invalid('password')) {
+          <span class="field__error">Use at least 8 characters.</span>
+        }
+      </div>
+
+      <button class="btn btn--primary btn--block" type="submit" [disabled]="busy()">
+        {{ busy() ? 'Creating account…' : 'Create account' }}
+      </button>
+
+      <p class="auth__foot">Already have an account? <a routerLink="/account/sign-in">Sign in</a></p>
+    </form>
+  </section>
+</div>

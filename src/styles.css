@@ -1,1 +1,457 @@
-/* You can add global styles to this file, and also import other style files */
+/* ------------------------------------------------------------------
+   Expense tracker — global design system
+   Ported from the approved mockups (expense-tracker-mockups.html).
+   ------------------------------------------------------------------ */
+
+@import url("https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600&display=swap");
+
+:root {
+  --ink: #1c1f26;
+  --ink-soft: #5b6070;
+  --ink-mute: #8b8f9c;
+  --paper: #f4f3ef;
+  --surface: #ffffff;
+  --surface-tint: #f8f7f5;
+  --line: #e4e2dc;
+  --line-strong: #c9c6bd;
+  --accent: #2c5f7c;
+  --danger: #a8322b;
+  --success: #4a7c59;
+
+  --radius: 6px;
+  --radius-lg: 10px;
+  --shadow-pop: 0 18px 40px rgba(28, 31, 38, 0.18);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: "Public Sans", system-ui, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-weight: 600;
+}
+
+h1 {
+  font-size: 26px;
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  font-size: 17px;
+}
+
+h3 {
+  font-size: 13px;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+
+a {
+  color: var(--accent);
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.muted {
+  color: var(--ink-soft);
+}
+
+/* ------------------------------ buttons ------------------------------ */
+
+.btn {
+  font: inherit;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.btn:hover:not(:disabled) {
+  border-color: var(--line-strong);
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn--primary {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: #fff;
+}
+
+.btn--primary:hover:not(:disabled) {
+  background: #2d3038;
+  border-color: #2d3038;
+}
+
+.btn--danger {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: #fff;
+}
+
+.btn--danger:hover:not(:disabled) {
+  background: #8f2a24;
+  border-color: #8f2a24;
+}
+
+.btn--icon {
+  padding: 6px 9px;
+  line-height: 1;
+  color: var(--ink-soft);
+}
+
+.btn--block {
+  width: 100%;
+}
+
+/* ------------------------------ fields ------------------------------- */
+
+.field {
+  margin-bottom: 16px;
+}
+
+.field label {
+  display: block;
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin-bottom: 6px;
+}
+
+.field input,
+.field select,
+.field textarea {
+  font: inherit;
+  width: 100%;
+  padding: 9px 11px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.field input:focus-visible,
+.field select:focus-visible,
+.field textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: var(--ink-mute);
+}
+
+.field input.is-invalid,
+.field select.is-invalid {
+  border-color: var(--danger);
+}
+
+.field__error {
+  display: block;
+  margin-top: 5px;
+  font-size: 12px;
+  color: var(--danger);
+}
+
+.select-inline {
+  font: inherit;
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+}
+
+/* ------------------------------ panels ------------------------------- */
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.panel__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.alert {
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.alert--error {
+  border-color: rgba(168, 50, 43, 0.35);
+  background: rgba(168, 50, 43, 0.07);
+  color: var(--danger);
+}
+
+.swatch {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  flex: none;
+  display: inline-block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* --------------------------- app screen chrome --------------------------- */
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+
+.topbar__month {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  margin-bottom: 20px;
+}
+
+.summary__cell {
+  padding: 16px 20px;
+  border-right: 1px solid var(--line);
+}
+
+.summary__cell:last-child {
+  border-right: 0;
+}
+
+.summary__cell span {
+  display: block;
+  font-size: 12px;
+  color: var(--ink-soft);
+  margin-bottom: 4px;
+}
+
+.summary__cell strong {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.summary__cell em {
+  font-style: normal;
+  font-size: 13px;
+  color: var(--danger);
+  margin-left: 6px;
+}
+
+.summary__cell em.is-down {
+  color: var(--success);
+}
+
+/* ------------------------------ split bar ------------------------------- */
+
+.split {
+  display: flex;
+  height: 10px;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+
+.split span {
+  display: block;
+}
+
+.legend {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px 32px;
+}
+
+.legend__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  margin: 0;
+}
+
+.legend__row i {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  flex: none;
+}
+
+.legend__row b {
+  margin-left: auto;
+  font-weight: 500;
+}
+
+.legend__row small {
+  color: var(--ink-mute);
+  width: 34px;
+  text-align: right;
+}
+
+/* ------------------------------- ledger --------------------------------- */
+
+.ledger {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.ledger th {
+  text-align: left;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-mute);
+  padding: 0 0 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.ledger th:last-child {
+  text-align: right;
+}
+
+.ledger td {
+  padding: 11px 0;
+  border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+}
+
+.ledger__day td {
+  padding: 16px 0 6px;
+  border-bottom: 0;
+  font-size: 12px;
+  color: var(--ink-mute);
+}
+
+/* Kept as a table-cell so rows stay on a shared baseline; the swatch sits inline. */
+.ledger__name i {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  margin-right: 10px;
+}
+
+.ledger__cat {
+  color: var(--ink-soft);
+}
+
+.ledger__amount {
+  text-align: right;
+  font-weight: 500;
+}
+
+.ledger__actions {
+  text-align: right;
+  white-space: nowrap;
+  color: var(--ink-mute);
+}
+
+.ledger__actions button {
+  margin-left: 2px;
+}
+
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 16px;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+.pager div {
+  display: flex;
+  gap: 8px;
+}
+
+@media (max-width: 900px) {
+  .summary {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .summary__cell:nth-child(odd) {
+    border-right: 1px solid var(--line);
+  }
+
+  .summary__cell:nth-child(even) {
+    border-right: 0;
+  }
+
+  .summary__cell:nth-child(-n + 2) {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .legend {
+    grid-template-columns: 1fr;
+  }
+
+  .ledger__cat {
+    display: none;
+  }
+
+  .ledger thead th:nth-child(2) {
+    display: none;
+  }
+}

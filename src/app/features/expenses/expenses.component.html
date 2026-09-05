@@ -1,0 +1,111 @@
+<div class="topbar">
+  <div class="topbar__month">
+    <button class="btn btn--icon" type="button" aria-label="Previous month" (click)="monthState.previous()">
+      &larr;
+    </button>
+    <h1>{{ monthState.label() }}</h1>
+    <button class="btn btn--icon" type="button" aria-label="Next month" (click)="monthState.next()">&rarr;</button>
+  </div>
+
+  <button class="btn btn--primary" type="button" [disabled]="categories().length === 0" (click)="openAdd()">
+    Add expense
+  </button>
+</div>
+
+@if (loadError(); as message) {
+  <p class="alert alert--error">{{ message }}</p>
+}
+
+<div class="panel">
+  <div class="panel__head">
+    <h2>Expenses</h2>
+
+    <div class="head-tools">
+      <span class="muted total">{{ monthTotal() | money: 'code' }}</span>
+      <select
+        class="select-inline"
+        aria-label="Filter by category"
+        [value]="categoryFilter()"
+        (change)="onFilterChange($any($event.target).value)"
+      >
+        <option value="">All categories</option>
+        @for (category of categories(); track category.id) {
+          <option [value]="category.id">{{ category.name }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <p class="muted">Loading expenses…</p>
+  } @else if (total() === 0) {
+    <app-empty-state
+      heading="No expenses here"
+      message="Nothing matches this month and filter. Log one to get started."
+    >
+      <button class="btn btn--primary" type="button" [disabled]="categories().length === 0" (click)="openAdd()">
+        Add expense
+      </button>
+    </app-empty-state>
+  } @else {
+    <table class="ledger">
+      <thead>
+        <tr>
+          <th>Description</th>
+          <th>Category</th>
+          <th>Amount</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (day of days(); track day.date) {
+          <tr class="ledger__day">
+            <td colspan="4">{{ day.date | dayLabel }}</td>
+          </tr>
+          @for (expense of day.expenses; track expense.id) {
+            <tr>
+              <td class="ledger__name">
+                <i [style.background]="expense.categoryId | categoryColor"></i>{{ expense.note }}
+              </td>
+              <td class="ledger__cat">{{ expense.categoryName }}</td>
+              <td class="ledger__amount num">{{ expense.amount | money }}</td>
+              <td class="ledger__actions">
+                <button class="btn btn--icon" type="button" (click)="openEdit(expense)">Edit</button>
+                <button class="btn btn--icon" type="button" (click)="confirmDelete(expense)">Delete</button>
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+
+    <div class="pager">
+      <span>{{ pageStart() }}&ndash;{{ pageEnd() }} of {{ total() }}</span>
+      <div>
+        <button class="btn" type="button" [disabled]="page() === 1" (click)="previousPage()">Previous</button>
+        <button class="btn" type="button" [disabled]="page() === pageCount()" (click)="nextPage()">Next</button>
+      </div>
+    </div>
+  }
+</div>
+
+@if (formOpen()) {
+  <app-expense-form
+    [expense]="editing()"
+    [categories]="categories()"
+    [year]="monthState.year()"
+    [month]="monthState.month()"
+    (saved)="onSaved()"
+    (cancelled)="closeForm()"
+  />
+}
+
+@if (pendingDelete(); as expense) {
+  <app-confirm-dialog
+    heading="Delete expense"
+    [message]="'Delete ' + expense.note + '? This cannot be undone.'"
+    [busy]="deleting()"
+    (confirmed)="deleteExpense()"
+    (cancelled)="pendingDelete.set(null)"
+  />
+}

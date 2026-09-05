@@ -1,0 +1,18 @@
+.head-tools {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.total {
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 560px) {
+  .head-tools {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+  }
+}

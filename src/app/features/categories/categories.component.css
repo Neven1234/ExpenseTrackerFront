@@ -1,0 +1,28 @@
+.cats {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cats__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.cats__row:last-child {
+  border-bottom: 0;
+}
+
+.cats__name {
+  margin-right: auto;
+  font-weight: 500;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}

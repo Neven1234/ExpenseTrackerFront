@@ -1,0 +1,53 @@
+.table-scroll {
+  overflow-x: auto;
+}
+
+.budgets {
+  min-width: 640px;
+}
+
+.budgets th:not(:first-child) {
+  text-align: right;
+}
+
+.right {
+  text-align: right;
+}
+
+.is-over {
+  color: var(--danger);
+}
+
+.linkish {
+  font: inherit;
+  font-weight: 500;
+  padding: 0;
+  background: none;
+  border: 0;
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
+}
+
+.linkish:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 16px;
+}
+
+.hint {
+  margin: -4px 0 16px;
+  font-size: 12px;
+  color: var(--ink-mute);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}

@@ -1,0 +1,17 @@
+<div class="stage" (click)="close()">
+  <div
+    class="modal"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-label]="heading"
+    [style.width.px]="width"
+    (click)="$event.stopPropagation()"
+  >
+    <div class="modal__head">
+      <h2>{{ heading }}</h2>
+      <button class="btn btn--icon" type="button" aria-label="Close" (click)="close()">&times;</button>
+    </div>
+
+    <ng-content />
+  </div>
+</div>
